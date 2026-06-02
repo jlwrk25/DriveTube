@@ -14,16 +14,17 @@ import {
   History, 
   ListVideo, 
   Compass, 
-  UserSquare 
+  UserSquare,
+  Flame
 } from 'lucide-react';
 import { DriveFile } from '../types';
 
 interface SidebarProps {
   currentFilter: {
-    type: 'all' | 'video' | 'image' | 'folder' | 'favorites' | 'history';
+    type: 'all' | 'video' | 'image' | 'folder' | 'favorites' | 'history' | 'shorts';
     folderId?: string;
   };
-  setFilter: (filter: { type: 'all' | 'video' | 'image' | 'folder' | 'favorites' | 'history'; folderId?: string }) => void;
+  setFilter: (filter: { type: 'all' | 'video' | 'image' | 'folder' | 'favorites' | 'history' | 'shorts'; folderId?: string }) => void;
   subfolders: DriveFile[];
   favoritesCount: number;
   historyCount: number;
@@ -57,6 +58,14 @@ export default function Sidebar({
         >
           <Video className="w-4.5 h-4.5 mb-1" />
           <span className="truncate max-w-full">Videos</span>
+        </button>
+
+        <button
+          onClick={() => setFilter({ type: 'shorts' })}
+          className={`w-[80%] flex flex-col items-center justify-center p-2.5 rounded-xl text-[10px] cursor-pointer hover:bg-slate-50 transition-all ${currentFilter.type === 'shorts' ? 'text-rose-650 font-bold bg-rose-50/50' : 'text-slate-500 hover:text-slate-900'}`}
+        >
+          <Flame className="w-4.5 h-4.5 mb-1" />
+          <span className="truncate max-w-full">Shorts</span>
         </button>
 
         <button
@@ -104,6 +113,14 @@ export default function Sidebar({
         >
           <Video className="w-4.5 h-4.5" />
           <span>Videos Only</span>
+        </button>
+
+        <button
+          onClick={() => setFilter({ type: 'shorts' })}
+          className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-lg text-sm cursor-pointer hover:bg-slate-50 transition-all ${currentFilter.type === 'shorts' ? 'text-rose-600 font-semibold bg-rose-50/50' : 'text-slate-600 hover:text-slate-900'}`}
+        >
+          <Flame className="w-4.5 h-4.5 text-rose-500 animate-pulse" />
+          <span className="font-bold text-rose-600">YouTube Shorts</span>
         </button>
 
         <button

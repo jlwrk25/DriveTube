@@ -16,6 +16,7 @@ import Sidebar from './components/Sidebar';
 import VideoGrid from './components/VideoGrid';
 import WatchView from './components/WatchView';
 import UploadWizard from './components/UploadWizard';
+import ShortsView from './components/ShortsView';
 
 // The absolute root folder ID provided by the user
 const ROOT_FOLDER_ID = '1K5az6LdVNCA0a5_06PUCaPlWoOVaDQHW';
@@ -37,23 +38,59 @@ export default function App() {
   const [files, setFiles] = useState<DriveFile[]>([]);
   const [subfolders, setSubfolders] = useState<DriveFile[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(false);
-  const [selectedMedia, setSelectedMedia] = useState<DriveFile | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<DriveFile | null>(() => {
+    try {
+      const saved = localStorage.getItem('drive_selected_media');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   // Local storage lists for Favorites and History
   const [favorites, setFavorites] = useState<string[]>(() => {
-    const saved = localStorage.getItem('drive_favorites');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('drive_favorites');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
   const [history, setHistory] = useState<string[]>(() => {
-    const saved = localStorage.getItem('drive_history');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('drive_history');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   // Current playlist/navigation selection filter
   const [currentFilter, setFilter] = useState<{
-    type: 'all' | 'video' | 'image' | 'folder' | 'favorites' | 'history';
+    type: 'all' | 'video' | 'image' | 'folder' | 'favorites' | 'history' | 'shorts';
     folderId?: string;
-  }>({ type: 'all' });
+  }>(() => {
+    try {
+      const saved = localStorage.getItem('drive_current_filter');
+      return saved ? JSON.parse(saved) : { type: 'all' };
+    } catch {
+      return { type: 'all' };
+    }
+  });
+
+  // Sync selectedMedia with localStorage
+  useEffect(() => {
+    if (selectedMedia) {
+      localStorage.setItem('drive_selected_media', JSON.stringify(selectedMedia));
+    } else {
+      localStorage.removeItem('drive_selected_media');
+    }
+  }, [selectedMedia]);
+
+  // Sync currentFilter with localStorage
+  useEffect(() => {
+    localStorage.setItem('drive_current_filter', JSON.stringify(currentFilter));
+  }, [currentFilter]);
 
   // Initialize Auth state listeners
   useEffect(() => {
@@ -244,7 +281,17 @@ export default function App() {
 
         {/* Content Viewer Panel */}
         <main className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
-          {selectedMedia ? (
+          {currentFilter.type === 'shorts' ? (
+            <ShortsView
+              files={files}
+              accessToken={token}
+              favorites={favorites}
+              onToggleFavorite={handleToggleFavorite}
+              onSelectMedia={handleSelectMedia}
+              userDisplayName={user.displayName}
+              userPhotoURL={user.photoURL}
+            />
+          ) : selectedMedia ? (
             <WatchView
               file={selectedMedia}
               accessToken={token}
