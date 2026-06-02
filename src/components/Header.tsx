@@ -89,15 +89,17 @@ export default function Header({
 
       {/* Right section: Actions & user avatar */}
       <div className="flex items-center gap-1.5 md:gap-3">
-        {/* Upload Button */}
-        <button
-          onClick={onOpenUploadWizard}
-          className="p-2 hover:bg-slate-50 rounded-full text-slate-800 cursor-pointer active:scale-95 transition-all flex items-center gap-1.5 bg-white border border-slate-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold hover:border-slate-350 shadow-xs hover:shadow-sm"
-          title="Google Drive Guide"
-        >
-          <Video className="w-4 h-4 text-rose-500" />
-          <span className="hidden sm:inline">Add Content</span>
-        </button>
+        {/* Upload Button - only shown on administrator account */}
+        {user?.email === 'jlwrk25@gmail.com' && (
+          <button
+            onClick={onOpenUploadWizard}
+            className="p-2 hover:bg-slate-50 rounded-full text-slate-800 cursor-pointer active:scale-95 transition-all flex items-center gap-1.5 bg-white border border-slate-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold hover:border-slate-350 shadow-xs hover:shadow-sm"
+            title="Google Drive Guide"
+          >
+            <Video className="w-4 h-4 text-rose-500" />
+            <span className="hidden sm:inline">Add Content</span>
+          </button>
+        )}
 
         {/* Notification indicator */}
         <button 

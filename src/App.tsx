@@ -270,8 +270,8 @@ export default function App() {
         </main>
       </div>
 
-      {/* Upload Wizard Guide popup */}
-      {showUploadWizard && (
+      {/* Upload Wizard Guide popup - only accessible to administrator */}
+      {showUploadWizard && user?.email === 'jlwrk25@gmail.com' && (
         <UploadWizard 
           onClose={() => setShowUploadWizard(false)} 
           folderId={ROOT_FOLDER_ID} 
