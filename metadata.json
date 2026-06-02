@@ -1,0 +1,6 @@
+{
+  "name": "Drive Video & Image Gallery",
+  "description": "A YouTube-style video and image gallery powered by a Google Drive folder.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
